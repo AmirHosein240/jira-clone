@@ -7,7 +7,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Outlet } from "react-router-dom";
 
 import Sidebar from "./components/Sidebar";
-import Header from "./components/ Header";
+import Header from "./components/Header";
 
 function DashboardLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
