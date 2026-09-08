@@ -9,9 +9,11 @@ import {
   updateTask,
 } from "../api/task.service";
 
+const TASKS_QUERY_KEY = ["tasks"];
+
 export function useTasks() {
   return useQuery({
-    queryKey: ["tasks"],
+    queryKey: TASKS_QUERY_KEY,
     queryFn: getTasks,
   });
 }
@@ -23,55 +25,91 @@ export function useCreateTask() {
     mutationFn: createTask,
 
     onSuccess: (newTask) => {
-      queryClient.setQueryData(["tasks"], (oldTasks: Task[] | undefined) => {
-        if (!oldTasks) {
-          return [newTask];
-        }
+      queryClient.setQueryData(
+        TASKS_QUERY_KEY,
+        (oldTasks: Task[] | undefined) => {
+          if (!oldTasks) {
+            return [newTask];
+          }
 
-        return [newTask, ...oldTasks];
-      });
+          return [newTask, ...oldTasks];
+        },
+      );
     },
   });
 }
+
 export function useDeleteTask() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: deleteTask,
+    mutationFn: async (taskId: number) => {
+      const tasks = queryClient.getQueryData<Task[]>(TASKS_QUERY_KEY) ?? [];
 
-    onSuccess: (_, deletedTaskId) => {
-      queryClient.setQueryData(["tasks"], (oldTasks: Task[] | undefined) => {
-        if (!oldTasks) {
-          return [];
-        }
+      const taskExists = tasks.some((task) => task.id === taskId);
 
-        return oldTasks.filter((task) => task.id !== deletedTaskId);
-      });
+      if (taskExists && taskId > 1_000_000_000_000) {
+        return taskId;
+      }
+
+      await deleteTask(taskId);
+
+      return taskId;
+    },
+
+    onSuccess: (deletedTaskId) => {
+      queryClient.setQueryData(
+        TASKS_QUERY_KEY,
+        (oldTasks: Task[] | undefined) => {
+          if (!oldTasks) {
+            return [];
+          }
+
+          return oldTasks.filter((task) => task.id !== deletedTaskId);
+        },
+      );
     },
   });
 }
+
 export function useUpdateTask() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       taskId,
       task,
     }: {
       taskId: number;
       task: Omit<Task, "id">;
-    }) => updateTask(taskId, task),
+    }) => {
+      const tasks = queryClient.getQueryData<Task[]>(TASKS_QUERY_KEY) ?? [];
+
+      const existingTask = tasks.find((item) => item.id === taskId);
+
+      if (existingTask && taskId > 1_000_000_000_000) {
+        return {
+          id: taskId,
+          ...task,
+        };
+      }
+
+      return updateTask(taskId, task);
+    },
 
     onSuccess: (updatedTask) => {
-      queryClient.setQueryData(["tasks"], (oldTasks: Task[] | undefined) => {
-        if (!oldTasks) {
-          return [updatedTask];
-        }
+      queryClient.setQueryData(
+        TASKS_QUERY_KEY,
+        (oldTasks: Task[] | undefined) => {
+          if (!oldTasks) {
+            return [updatedTask];
+          }
 
-        return oldTasks.map((task) =>
-          task.id === updatedTask.id ? updatedTask : task,
-        );
-      });
+          return oldTasks.map((task) =>
+            task.id === updatedTask.id ? updatedTask : task,
+          );
+        },
+      );
     },
   });
 }

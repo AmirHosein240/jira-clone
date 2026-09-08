@@ -24,6 +24,7 @@ export async function getTasks(): Promise<Task[]> {
     priority: todo.id % 3 === 0 ? "High" : todo.id % 2 === 0 ? "Medium" : "Low",
   }));
 }
+
 export async function createTask(task: Omit<Task, "id">): Promise<Task> {
   const response = await fetch("https://jsonplaceholder.typicode.com/todos", {
     method: "POST",
@@ -40,19 +41,16 @@ export async function createTask(task: Omit<Task, "id">): Promise<Task> {
     throw new Error("Failed to create task");
   }
 
-  const data: {
-    id: number;
-    title: string;
-    completed: boolean;
-  } = await response.json();
+  const data: ApiTodo = await response.json();
 
   return {
-    id: data.id,
+    id: Date.now(),
     title: data.title,
     status: task.status,
     priority: task.priority,
   };
 }
+
 export async function deleteTask(taskId: number): Promise<void> {
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/todos/${taskId}`,
@@ -65,6 +63,7 @@ export async function deleteTask(taskId: number): Promise<void> {
     throw new Error("Failed to delete task");
   }
 }
+
 export async function updateTask(
   taskId: number,
   task: Omit<Task, "id">,
@@ -87,14 +86,10 @@ export async function updateTask(
     throw new Error("Failed to update task");
   }
 
-  const data: {
-    id: number;
-    title: string;
-    completed: boolean;
-  } = await response.json();
+  const data: ApiTodo = await response.json();
 
   return {
-    id: data.id,
+    id: taskId,
     title: data.title,
     status: task.status,
     priority: task.priority,
