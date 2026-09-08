@@ -1,75 +1,115 @@
-# React + TypeScript + Vite
+# Jira Clone
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A lightweight Jira-style project & task management dashboard built with React, TypeScript, and Material UI. It includes login-protected routes, a dashboard overview, and CRUD screens for projects, tasks, and users.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Authentication** — simple email/password login with a default demo profile, session persisted in `localStorage`, and protected routes that redirect unauthenticated users to `/login`.
+- **Dashboard** — at-a-glance stat cards, recent tasks, and project progress widgets.
+- **Projects** — list, create, update, and delete projects, each with a status (`Planning` / `Active` / `Completed`) and task count.
+- **Tasks** — list, create, update, and delete tasks with status (`Todo` / `Done`) and priority (`Low` / `Medium` / `High`).
+- **Users** — searchable, filterable, paginated user table with role (`Admin` / `Manager` / `Member`) and status (`Active` / `Inactive`).
+- **Theming** — light/dark mode support via a custom theme context.
+- **Data fetching & caching** — powered by TanStack Query.
 
-## React Compiler
+> **Note:** Projects, tasks, and users are currently backed by the public [JSONPlaceholder](https://jsonplaceholder.typicode.com/) API for demo purposes, with data reshaped to fit this app's domain models. Writes (create/update/delete) succeed against the mock API but aren't persisted server-side. A `mockProjects` fixture is also included for local/offline use.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+- **React 19** + **TypeScript**
+- **Vite** — dev server & build tooling
+- **React Router 7** — routing & protected routes
+- **Material UI (MUI) 9** + **Emotion** — component library & styling
+- **TanStack Query 5** — server-state management
+- **Zustand** — client-side state management
+- **Axios** — HTTP client
+- **ESLint** — linting
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Getting Started
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Prerequisites
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- Node.js (LTS recommended)
+- npm
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Installation
 
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+### Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+npm run dev
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+This starts the Vite dev server (default: `http://localhost:5173`).
+
+### Build
+
+```bash
+npm run build
+```
+
+Type-checks the project and builds an optimized production bundle.
+
+### Preview production build
+
+```bash
+npm run preview
+```
+
+### Lint
+
+```bash
+npm run lint
+```
+
+## Demo Login
+
+The app ships with a default demo profile (created on first login attempt and stored in `localStorage`):
+
+- **Email:** `admin@example.com`
+- **Password:** `123456`
+
+You can update this profile from within the app; changes are saved to `localStorage` under the `task_manager_profile` key.
+
+## Project Structure
 
 ```
+src/
+├── app/                 # Router and app-level providers
+├── components/          # Shared/reusable components
+├── features/            # Feature modules (auth, dashboard, projects, tasks, users)
+│   └── <feature>/
+│       ├── api/         # API/service functions
+│       ├── components/  # Feature-specific components
+│       ├── hooks/       # Feature-specific hooks (React Query, etc.)
+│       └── types/       # TypeScript types
+├── layouts/             # Page layouts (dashboard shell, header, sidebar)
+├── pages/                # Route-level page components
+├── theme/                # Theme configuration & light/dark mode context
+├── index.css
+└── main.tsx
+```
+
+## Routes
+
+| Path         | Description                       | Protected |
+| ------------ | --------------------------------- | --------- |
+| `/login`     | Login page                        | No        |
+| `/dashboard` | Overview stats & recent activity  | Yes       |
+| `/projects`  | Project list & management         | Yes       |
+| `/tasks`     | Task list & management            | Yes       |
+| `/users`     | User directory with search/filter | Yes       |
+
+Unauthenticated users are redirected to `/login`; the root path (`/`) redirects to `/dashboard`.
+
+## Deployment
+
+Includes a `vercel.json` with an SPA rewrite rule, so it can be deployed directly to [Vercel](https://vercel.com/) with no extra configuration.
+
+## License
+
+No license file is currently included. Add one (e.g., MIT) if you plan to distribute or open-source this project.
