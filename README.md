@@ -1,115 +1,425 @@
 # Jira Clone
 
-A lightweight Jira-style project & task management dashboard built with React, TypeScript, and Material UI. It includes login-protected routes, a dashboard overview, and CRUD screens for projects, tasks, and users.
+A modern and responsive Jira-inspired project management dashboard built with **React, TypeScript, Material UI, and TanStack Query**.
 
-## Features
+This project was developed as a Front-End portfolio project to demonstrate modern React development practices, component-based architecture, state management, data fetching, authentication flows, CRUD operations, and responsive UI design.
 
-- **Authentication** — simple email/password login with a default demo profile, session persisted in `localStorage`, and protected routes that redirect unauthenticated users to `/login`.
-- **Dashboard** — at-a-glance stat cards, recent tasks, and project progress widgets.
-- **Projects** — list, create, update, and delete projects, each with a status (`Planning` / `Active` / `Completed`) and task count.
-- **Tasks** — list, create, update, and delete tasks with status (`Todo` / `Done`) and priority (`Low` / `Medium` / `High`).
-- **Users** — searchable, filterable, paginated user table with role (`Admin` / `Manager` / `Member`) and status (`Active` / `Inactive`).
-- **Theming** — light/dark mode support via a custom theme context.
-- **Data fetching & caching** — powered by TanStack Query.
+## 🚀 Live Demo
 
-> **Note:** Projects, tasks, and users are currently backed by the public [JSONPlaceholder](https://jsonplaceholder.typicode.com/) API for demo purposes, with data reshaped to fit this app's domain models. Writes (create/update/delete) succeed against the mock API but aren't persisted server-side. A `mockProjects` fixture is also included for local/offline use.
+**[View Live Demo](https://jira-clone-green.vercel.app/)**
 
-## Tech Stack
+## 📦 GitHub Repository
 
-- **React 19** + **TypeScript**
-- **Vite** — dev server & build tooling
-- **React Router 7** — routing & protected routes
-- **Material UI (MUI) 9** + **Emotion** — component library & styling
-- **TanStack Query 5** — server-state management
-- **Zustand** — client-side state management
-- **Axios** — HTTP client
-- **ESLint** — linting
+**[View Source Code](https://github.com/AmirHosein240/jira-clone)**
 
-## Getting Started
+---
 
-### Prerequisites
+## ✨ Features
 
-- Node.js (LTS recommended)
-- npm
+### 🔐 Authentication
 
-### Installation
+- Login page with form validation
+- Protected application routes
+- Persistent authentication state
+- Logout functionality
+- Change password functionality
+- User profile management
+- Update username and email
+- Profile image management
+
+### 📊 Dashboard
+
+- Overview of project statistics
+- Task statistics
+- Project progress
+- Recent tasks
+- Responsive dashboard layout
+
+### 📁 Projects
+
+- Display projects in a structured table
+- Create new projects
+- Edit project information
+- Delete projects
+- Search and filter projects
+- Project status management
+
+### ✅ Tasks
+
+- Display tasks
+- Create new tasks
+- Edit tasks
+- Delete tasks
+- Search and filter tasks
+- Task status management
+- Task priority management
+- Task cards and table views
+
+### 👥 Users
+
+- Display users
+- Search users
+- Filter users
+- Responsive users table
+
+### 🎨 UI & UX
+
+- Material UI component system
+- Responsive layout
+- Dark / Light theme
+- Reusable components
+- Loading states
+- Skeleton loaders
+- Error states
+- Snackbar notifications
+- Confirmation dialogs
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology      | Purpose                                       |
+| --------------- | --------------------------------------------- |
+| React           | Building the user interface                   |
+| TypeScript      | Static typing and safer development           |
+| Vite            | Development environment and build tool        |
+| Material UI     | UI components and styling                     |
+| React Router    | Client-side routing                           |
+| TanStack Query  | Server-state and asynchronous data management |
+| Axios           | HTTP requests                                 |
+| JSONPlaceholder | Mock API / development data                   |
+| Git             | Version control                               |
+| GitHub          | Source code hosting                           |
+| Vercel          | Deployment                                    |
+
+---
+
+## 🏗️ Project Architecture
+
+The project follows a **feature-based architecture** to keep the codebase modular, scalable, and easy to maintain.
+
+```text
+src/
+├── app/
+│   ├── providers.tsx
+│   └── router.tsx
+│
+├── components/
+│   ├── AppSnackbar.tsx
+│   ├── ProtectedRoute.tsx
+│   ├── StatusMessage.tsx
+│   └── TableSkeleton.tsx
+│
+├── features/
+│   ├── auth/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── types/
+│   │   └── auth.ts
+│   │
+│   ├── dashboard/
+│   │   └── components/
+│   │
+│   ├── projects/
+│   │   ├── api/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   └── types/
+│   │
+│   ├── tasks/
+│   │   ├── api/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   └── types/
+│   │
+│   └── users/
+│       ├── api/
+│       ├── components/
+│       ├── hooks/
+│       └── types/
+│
+├── layouts/
+│   ├── DashboardLayout.tsx
+│   └── components/
+│
+├── pages/
+│   ├── Dashboard/
+│   ├── Login/
+│   ├── Projects/
+│   ├── Tasks/
+│   └── Users/
+│
+├── theme/
+│   ├── ThemeModeContext.tsx
+│   └── theme.ts
+│
+├── App.tsx
+├── index.css
+└── main.tsx
+```
+
+### Why Feature-Based Architecture?
+
+Instead of grouping all components, hooks, services, and types into global folders, each feature owns its related logic.
+
+For example:
+
+```text
+features/
+└── tasks/
+    ├── api/
+    ├── components/
+    ├── hooks/
+    └── types/
+```
+
+This makes the project easier to:
+
+- Maintain
+- Scale
+- Test
+- Refactor
+- Understand
+- Extend with new features
+
+---
+
+## 🔄 Data Fetching
+
+The application uses **TanStack Query** for asynchronous data management.
+
+The general flow is:
+
+```text
+Component
+   ↓
+Custom Hook
+   ↓
+Service Layer
+   ↓
+API / Mock Data
+```
+
+For example:
+
+```text
+TaskTable
+   ↓
+useTasks()
+   ↓
+task.service.ts
+   ↓
+API / Mock Data
+```
+
+This keeps API logic separated from UI components and makes the application easier to maintain.
+
+---
+
+## 🌐 API & Mock Data
+
+The project uses **JSONPlaceholder** as a public mock API for development purposes.
+
+Because JSONPlaceholder is a fake REST API, some write operations such as creating, updating, or deleting resources are not intended to persist permanently on the server.
+
+The application therefore focuses on demonstrating the **Front-End architecture and user experience** rather than implementing a production backend.
+
+A real production version could replace the current service layer with a custom REST API or another backend without requiring major changes to the UI architecture.
+
+---
+
+## 🧭 Application Routes
+
+| Route        | Description         |
+| ------------ | ------------------- |
+| `/login`     | Authentication page |
+| `/dashboard` | Main dashboard      |
+| `/projects`  | Project management  |
+| `/tasks`     | Task management     |
+| `/users`     | Users management    |
+
+Protected routes are handled through a reusable `ProtectedRoute` component.
+
+---
+
+## 🎨 Theme
+
+The application supports:
+
+- Light mode
+- Dark mode
+- Centralized theme configuration
+- Material UI theme customization
+
+Theme state is managed through a dedicated context:
+
+```text
+theme/
+├── ThemeModeContext.tsx
+└── theme.ts
+```
+
+---
+
+## 📱 Responsive Design
+
+The interface is designed to work across different screen sizes, including:
+
+- Desktop
+- Laptop
+- Tablet
+- Mobile
+
+Material UI's responsive layout system is used throughout the application.
+
+---
+
+## ⚡ Loading & Error States
+
+The application provides dedicated UI states for asynchronous operations:
+
+- Loading indicators
+- Skeleton loaders
+- Error messages
+- Empty states
+- Snackbar notifications
+
+This improves the overall user experience and prevents abrupt UI changes while data is loading.
+
+---
+
+## 🧩 Reusable Components
+
+Several reusable components are used throughout the application, including:
+
+- Tables
+- Dialogs
+- Filters
+- Cards
+- Status messages
+- Skeleton loaders
+- Snackbar notifications
+- Protected routes
+
+The goal is to avoid unnecessary duplication and keep UI behavior consistent.
+
+---
+
+## 🖥️ Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/AmirHosein240/jira-clone.git
+```
+
+### 2. Navigate to the project
+
+```bash
+cd jira-clone
+```
+
+### 3. Install dependencies
 
 ```bash
 npm install
 ```
 
-### Development
+### 4. Start the development server
 
 ```bash
 npm run dev
 ```
 
-This starts the Vite dev server (default: `http://localhost:5173`).
+The application will be available at:
 
-### Build
+```text
+http://localhost:5173
+```
+
+---
+
+## 📦 Production Build
+
+To create a production build:
 
 ```bash
 npm run build
 ```
 
-Type-checks the project and builds an optimized production bundle.
-
-### Preview production build
+To preview the production build locally:
 
 ```bash
 npm run preview
 ```
 
-### Lint
+---
 
-```bash
-npm run lint
-```
+## 🚀 Deployment
 
-## Demo Login
+The application is deployed using **Vercel**.
 
-The app ships with a default demo profile (created on first login attempt and stored in `localStorage`):
+Every update pushed to the `main` branch can trigger a new deployment automatically.
 
-- **Email:** `admin@example.com`
-- **Password:** `123456`
+**Production:**
+https://jira-clone-green.vercel.app/
 
-You can update this profile from within the app; changes are saved to `localStorage` under the `task_manager_profile` key.
+---
 
-## Project Structure
+## 🔮 Future Improvements
 
-```
-src/
-├── app/                 # Router and app-level providers
-├── components/          # Shared/reusable components
-├── features/            # Feature modules (auth, dashboard, projects, tasks, users)
-│   └── <feature>/
-│       ├── api/         # API/service functions
-│       ├── components/  # Feature-specific components
-│       ├── hooks/       # Feature-specific hooks (React Query, etc.)
-│       └── types/       # TypeScript types
-├── layouts/             # Page layouts (dashboard shell, header, sidebar)
-├── pages/                # Route-level page components
-├── theme/                # Theme configuration & light/dark mode context
-├── index.css
-└── main.tsx
-```
+Possible improvements for a production-ready version include:
 
-## Routes
+- Real backend integration
+- Database integration
+- Real-time task updates
+- Role-based access control
+- Advanced task filtering
+- Drag & drop task management
+- Pagination
+- Unit and integration tests
+- Form validation improvements
+- Optimized code splitting and lazy loading
+- CI/CD pipeline
+- More advanced project analytics
 
-| Path         | Description                       | Protected |
-| ------------ | --------------------------------- | --------- |
-| `/login`     | Login page                        | No        |
-| `/dashboard` | Overview stats & recent activity  | Yes       |
-| `/projects`  | Project list & management         | Yes       |
-| `/tasks`     | Task list & management            | Yes       |
-| `/users`     | User directory with search/filter | Yes       |
+---
 
-Unauthenticated users are redirected to `/login`; the root path (`/`) redirects to `/dashboard`.
+## 🎯 What This Project Demonstrates
 
-## Deployment
+This project demonstrates practical experience with:
 
-Includes a `vercel.json` with an SPA rewrite rule, so it can be deployed directly to [Vercel](https://vercel.com/) with no extra configuration.
+- Building applications with React and TypeScript
+- Creating reusable UI components
+- Working with Material UI
+- Client-side routing
+- Protected routes
+- Authentication flows
+- CRUD interfaces
+- API/service layer separation
+- Server-state management with TanStack Query
+- Responsive design
+- Light/Dark themes
+- Feature-based project architecture
+- Git and GitHub workflow
+- Production deployment with Vercel
 
-## License
+---
 
-No license file is currently included. Add one (e.g., MIT) if you plan to distribute or open-source this project.
+## 👨‍💻 Author
+
+**AmirHosein**
+
+Front-End Developer focused on building modern and maintainable web applications with React and TypeScript.
+
+### Links
+
+- GitHub: https://github.com/AmirHosein240
+- Project: https://github.com/AmirHosein240/jira-clone
+- Live Demo: https://jira-clone-green.vercel.app/
+
+---
+
+## ⭐ Feedback
+
+If you find this project useful or have suggestions for improvement, feel free to open an issue or submit a pull request.
