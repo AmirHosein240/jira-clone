@@ -21,12 +21,14 @@ function Login() {
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [loginError, setLoginError] = useState("");
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setEmailError("");
     setPasswordError("");
+    setLoginError("");
 
     let hasError = false;
 
@@ -44,7 +46,12 @@ function Login() {
       return;
     }
 
-    login();
+    const isLoginSuccessful = login(email.trim(), password);
+
+    if (!isLoginSuccessful) {
+      setLoginError("Invalid email or password");
+      return;
+    }
 
     navigate("/dashboard");
   };
@@ -71,7 +78,12 @@ function Login() {
         }}
       >
         <CardContent sx={{ p: 4 }}>
-          <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Box
+            sx={{
+              textAlign: "center",
+              mb: 4,
+            }}
+          >
             <Typography
               variant="h4"
               sx={{
@@ -115,6 +127,16 @@ function Login() {
               helperText={passwordError}
               fullWidth
             />
+
+            {loginError && (
+              <Typography
+                color="error"
+                variant="body2"
+                sx={{ textAlign: "center" }}
+              >
+                {loginError}
+              </Typography>
+            )}
 
             <Button
               type="submit"
